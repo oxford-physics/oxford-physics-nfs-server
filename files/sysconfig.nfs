@@ -3,7 +3,7 @@
 # will advertise. The values are "no" or "yes"
 # with yes being the default
 #MOUNTD_NFS_V2="no"
-#MOUNTD_NFS_V3="no"
+MOUNTD_NFS_V3="yes"
 #
 #
 # Path to remote quota server. See rquotad(8)
@@ -29,7 +29,7 @@
 #RPCNFSDARGS="-N 4"
 # Number of nfs server processes to be started.
 # The default is 8. 
-#RPCNFSDCOUNT=8
+RPCNFSDCOUNT=16
 # Stop the nfsd module from being pre-loaded
 #NFSD_MODULE="noload"
 # Set V4 grace period in seconds
@@ -38,7 +38,7 @@
 #
 #
 # Optional arguments passed to rpc.mountd. See rpc.mountd(8)
-RPCMOUNTDOPTS="--manage-gids"
+RPCMOUNTDOPTS="--p 32767 --manage-gids"
 
 # Port rpc.mountd should listen on.
 #MOUNTD_PORT=892
@@ -61,11 +61,11 @@ RPCMOUNTDOPTS="--manage-gids"
 # Set to turn on Secure NFS mounts. 
 SECURE_NFS="yes"
 # Optional arguments passed to rpc.gssd. See rpc.gssd(8)
-RPCGSSDARGS=""
+RPCGSSDARGS="-v"
 
 # Optional arguments passed to rpc.svcgssd. See rpc.svcgssd(8)
 #RPCSVCGSSDARGS=" -p host/cplxfs3-test.physics.ox.ac.uk"
-RPCSVCGSSDARGS=""
+RPCSVCGSSDARGS="-vvv -rrr"
 #
 # To enable RDMA support on the server by setting this to
 # the port the server should listen on
