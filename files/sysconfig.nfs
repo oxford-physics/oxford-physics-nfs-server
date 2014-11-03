@@ -61,11 +61,11 @@ RPCMOUNTDOPTS="--p 32767 --manage-gids"
 # Set to turn on Secure NFS mounts. 
 SECURE_NFS="yes"
 # Optional arguments passed to rpc.gssd. See rpc.gssd(8)
-RPCGSSDARGS="-v"
+RPCGSSDARGS=""
 
 # Optional arguments passed to rpc.svcgssd. See rpc.svcgssd(8)
 #RPCSVCGSSDARGS=" -p host/cplxfs3-test.physics.ox.ac.uk"
-RPCSVCGSSDARGS="-vvv -rrr"
+RPCSVCGSSDARGS=""
 #
 # To enable RDMA support on the server by setting this to
 # the port the server should listen on

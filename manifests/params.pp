@@ -1,6 +1,7 @@
 class oxford_nfs_server::params ( 
       $secretsfilepath = hiera("oxford_nfs_server::params::secretsfilepath",  "site_files/oxford_nfs_server"), 
-      $configfilepath =  hiera("oxford_nfs_server::params::configfilepath", "modules/$module_name") 
+      $configfilepath =  hiera("oxford_nfs_server::params::configfilepath", "modules/$module_name") ,
+      $idmapdfilepath = hiera("oxford_nfs_server::params::idmapdfilepath", "modules/$module_name")
 )
 { 
    notify { "This class requires a manual keytab to be created with {host,nfs,[cifs]}/$(hostname).physics.ox.ac.uk@PHYSICS.OX.AC.UK.. ": }
