@@ -13,8 +13,26 @@ class oxford_nfs_server::nfs (
 ) inherits oxford_nfs_server::params 
 {
 
-   $central_nfs_packagelist = ['pam_krb5', 'openldap-clients','nfs-utils', 'nfs4-acl-tools']
-   $servicelist = ['nfs', 'rpcgssd', 'rpcsvcgssd', 'rpcidmapd']
+
+   case $::operatingsystem {
+      /Scientific/, /CentOS/: {
+         case $::operatingsystemmajrelease {
+           default : {}
+           /6/: {
+             $servicelist = ['nfs', 'rpcgssd', 'rpcsvcgssd', 'rpcidmapd']
+             $central_nfs_packagelist = ['pam_krb5', 'openldap-clients','nfs-utils', 'nfs4-acl-tools']
+             $nfsservicenotifylist = Service['nfs']
+
+           }
+           /7/: {
+            $servicelist = ['rpcbind', "nfs-server", "nfs-secure-server", "nfs-lock", "nfs-idmap" ]
+            $central_nfs_packagelist = ['nfs-utils', 'nfs-utils-lib', "rdma"]
+            $nfsservicenotifylist = Service['nfs-secure-server']
+           }
+         }
+      }
+   }
+
    ensure_packages ( $central_nfs_packagelist )
    service{  $servicelist:
                    ensure => running,
@@ -31,7 +49,7 @@ class oxford_nfs_server::nfs (
           owner   => 'root',
           group   => 'root',
           mode    => '0444',
-          notify => Service['nfs']
+          notify => $nfsservicenotifylist
        }
 
        file { '/etc/idmapd.conf':
@@ -41,7 +59,7 @@ class oxford_nfs_server::nfs (
           owner   => 'root',
           group   => 'root',
           mode    => '0444',
-          notify => Service['nfs']
+          notify => $nfsservicenotifylist
       }
        #Actually need a reboot here
        file { '/etc/modprobe.d/nfs.conf':
@@ -51,7 +69,7 @@ class oxford_nfs_server::nfs (
           owner   => 'root',
           group   => 'root',
           mode    => '0444',
-          notify => Service['nfs']
+          notify => $nfsservicenotifylist
       }
        
 }
@@ -61,16 +79,24 @@ class oxford_nfs_server::generic   (
    $configfilepath = $oxford_nfs_server::params::configfilepath
 ) inherits oxford_nfs_server::params
 {
-      $servicelist = ['rpcbind']
       $packages =  [ 'krb5-libs', 'krb5-workstation']
       ensure_packages ( $packages )
-   
-  file { '/etc/nscd.conf':
-      ensure  => present,
-      source  => "puppet:///$configfilepath/nscd.conf",
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0444',
-  }
+      case $::operatingsystem {
+      /Scientific/, /CentOS/: {
+         case $::operatingsystemmajrelease {
+           default : {}
+           #Lets try sl7 without nscd
+           /6/: {
+
+                 file { '/etc/nscd.conf':
+                       ensure  => present,
+                       source  => "puppet:///$configfilepath/nscd.conf",
+                       owner   => 'root',
+                       group   => 'root',
+                       mode    => '0444',
+                 }
+           }
+         }
+     }}
 
 }
