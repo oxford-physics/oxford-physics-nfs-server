@@ -13,7 +13,7 @@ class oxford_nfs_server::nfs (
 ) inherits oxford_nfs_server::params 
 {
 
-
+   exec {"/bin/echo noop > /sys/block/sdb/queue/scheduler":}
    case $::operatingsystem {
       /Scientific/, /CentOS/: {
          case $::operatingsystemmajrelease {
@@ -26,7 +26,7 @@ class oxford_nfs_server::nfs (
            }
            /7/: {
             $servicelist = ['rpcbind', "nfs-server", "nfs-secure-server", "nfs-lock", "nfs-idmap" ]
-            $central_nfs_packagelist = ['nfs-utils', 'nfs-utils-lib', "rdma"]
+            $central_nfs_packagelist = ['nfs-utils', "rdma"]
             $nfsservicenotifylist = Service['nfs-secure-server']
            }
          }
